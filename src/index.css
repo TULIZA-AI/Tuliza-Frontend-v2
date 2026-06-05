@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  /* APHRC Brand Colors */
+  --color-aphrc-green: #7BC148;
+  --color-aphrc-light: #B9D989;
+  --color-aphrc-dark: #020101;
+  
+  /* Clinical Risk Alert Colors */
+  --color-risk-high: #DC2626;
+  --color-risk-medium: #D97706;
+  --color-risk-low: #2563EB;
+  
+  /* App Background */
+  --color-surface: #F8FAFC;
+
+  /* Font */
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+body {
+  @apply bg-surface text-aphrc-dark antialiased;
+}
