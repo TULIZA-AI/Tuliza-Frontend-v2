@@ -1,50 +1,30 @@
 import axios from 'axios';
-import type {
-  TriageRequest, TriageResponse,
-  FacilityRequest, Facility,
-  AftercareRequest, AftercareResponse
-} from '../types';
+import type { TriageRequest, TriageResponse } from '../types';
 
-// Retrieve the base URL dynamically based on environment
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-
-const apiClient = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
+  headers: { 'Content-Type': 'application/json' },
 });
 
-export const tulizaApi = {
-  /**
-   * Checks backend health status and confirms model is loaded
-   */
-  checkHealth: async (): Promise<{ status: string; model_auc: number; model_recall: number }> => {
-    const response = await apiClient.get('/health');
-    return response.data;
-  },
+// Triage
+export const assessRisk = (data: TriageRequest) =>
+  api.post<TriageResponse>('/api/triage/assess', data);
 
-  /**
-   * step 1: Submit clinical information to run model inference
-   */
-  assessRisk: async (data: TriageRequest): Promise<TriageResponse> => {
-    const response = await apiClient.post<TriageResponse>('/api/triage/assess', data);
-    return response.data;
-  },
+// Facilities
+export interface FacilityQuery {
+  location: string;
+  risk_level: string;
+  slum_context: boolean;
+}
+export const findFacilities = (data: FacilityQuery) =>
+  api.post('/api/facilities/find', data);
 
-  /**
-   * Step 2: Retrieve a prioritized list of up to 4 nearby health facilities
-   */
-  findFacilities: async (data: FacilityRequest): Promise<Facility[]> => {
-    const response = await apiClient.post<Facility[]>('/api/facilities/find', data);
-    return response.data;
-  },
-
-  /**
-   * Step 3: Fetch tailored emotional, physical, and emergency aftercare text
-   */
-  getAftercare: async (data: AftercareRequest): Promise<AftercareResponse> => {
-    const response = await apiClient.post<AftercareResponse>('/api/aftercare/support', data);
-    return response.data;
-  },
-};
+// Aftercare
+export interface AftercareQuery {
+  loss_type: string;
+  gestational_age: number;
+  risk_level: string;
+  language: string;
+}
+export const getAftercare = (data: AftercareQuery) =>
+  api.post('/api/aftercare/support', data);
