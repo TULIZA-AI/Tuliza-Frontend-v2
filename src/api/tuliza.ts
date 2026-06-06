@@ -28,3 +28,16 @@ export interface AftercareQuery {
 }
 export const getAftercare = (data: AftercareQuery) =>
   api.post('/api/aftercare/support', data);
+
+export interface NLPResult {
+  input_text:        string;
+  urgency:           string;
+  confidence:        number;
+  symptoms_detected: { term: string; flag: string; clinical: string }[];
+  nlp_label:         string;
+  keyword_count:     number;
+  recommendation:    string;
+}
+
+export const analyseSymptoms = (text: string) =>
+  api.post<NLPResult>('/api/nlp/symptom-triage', { text });

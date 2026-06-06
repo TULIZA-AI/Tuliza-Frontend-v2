@@ -39,3 +39,12 @@ export interface AftercareContent {
   follow_up:         string;
   resources:         string[];
 }
+export interface NLPResult {
+  input_text:        string;
+  urgency:           string;
+  confidence:        number;
+  symptoms_detected: { term: string; flag: string; clinical: string }[];
+  nlp_label:         string;
+  keyword_count:     number;
+  recommendation:    string;
+}
