@@ -47,19 +47,40 @@ export default function Facilities({ assessment, triageData, onNext, onBack }: P
   return (
     <div className="space-y-6">
       {/* Risk banner */}
-      <div className={`p-4 border-l-4 rounded-r-lg ${riskStyles[assessment.risk_level]}`}>
-        <div className="flex items-center gap-2 mb-1">
-          <AlertTriangle size={20}/>
-          <h3 className="font-bold uppercase tracking-widest">
-            {assessment.risk_level} RISK
-          </h3>
-        </div>
-        <p className="text-sm font-medium mb-2">{assessment.message}</p>
-        <div className="bg-white/80 p-2 rounded text-sm font-bold shadow-sm inline-block">
-          Action: {assessment.action.replace(/_/g, ' ')}
-        </div>
-      </div>
-
+      {/* Replace the existing risk banner div with this */}
+<div className={`rounded-2xl p-5 text-center mb-2
+  ${assessment.risk_level === 'HIGH'
+    ? 'bg-red-600 text-white'
+    : assessment.risk_level === 'MEDIUM'
+    ? 'bg-amber-500 text-white'
+    : 'bg-green-600 text-white'
+  }`}>
+  <div className="text-5xl font-black mb-1">
+    {assessment.risk_percent ?? Math.round(assessment.risk_score * 100)}%
+  </div>
+  <div className="text-lg font-bold uppercase tracking-widest mb-2">
+    {assessment.risk_level} RISK
+  </div>
+  <div className="text-sm opacity-90 mb-3">{assessment.message}</div>
+  <div className="inline-block bg-white/20 backdrop-blur px-4 py-1.5
+                  rounded-full text-sm font-bold">
+    {assessment.action.replace(/_/g, ' ')}
+  </div>
+</div>
+    <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+  <div className="flex justify-between text-xs text-gray-500 mb-1.5">
+    <span className="font-semibold">Model confidence</span>
+    <span className="font-bold text-aphrc-green">
+      AUC 0.937 · Recall 88.9%
+    </span>
+  </div>
+  <div className="w-full bg-gray-200 rounded-full h-2">
+    <div className="bg-aphrc-green h-2 rounded-full" style={{width: '93.7%'}}/>
+  </div>
+  <p className="text-xs text-gray-400 mt-1.5">
+   Trained on APHRC Kenya data · 211 clinical cases
+  </p>
+</div>
       <h2 className="text-xl font-bold text-aphrc-dark border-b pb-2">
         Recommended Facilities
       </h2>
